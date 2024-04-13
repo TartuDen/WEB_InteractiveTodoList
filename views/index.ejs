@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Owl Carousel CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Set height of the content area */
+            .content {
+                min-height: calc(100vh - 56px); /* Adjust based on your navbar height */
+                /* 56px is the default height of the navbar in Bootstrap */
+            }
+
+            /* Sidebar styling */
+            .sidebar {
+                height: 75vh;
+            }
+
+            /* Centering the carousel */
+            .carousel-container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100%;
+            }
+
+            /* Styling the carousel box */
+            .owl-carousel {
+                width: 80%; /* Adjust as needed */
+            }
+
+            .owl-carousel .item {
+                margin: 5px;
+            }
+
+            .owl-carousel .item .card {
+                width: 100%;
+            }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid content">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-2 bg-dark text-light d-flex flex-column sidebar">
+                <h3>Welcome: <%= user.name %></h3>
+                <!-- User data -->
+                <p>Email: <%= user.email %></p>
+                <% if (user.ava) { %>
+                    <img src="<%= user.ava %>" alt="User Avatar" style="max-width: 100px;">
+                <% } else { %>
+                    <!-- Use default avatar if user's avatar is not available -->
+                    <img src="/img/default_ava.svg" alt="Default Avatar" style="max-width: 100px;">
+                <% } %>
+                <!-- Sidebar content goes here -->
+            </div>
+
+            <!-- Content -->
+            <div class="col-8">
+                <div class="carousel-container">
+                    <div class="owl-carousel owl-theme">
+                        <div class="item">
+                            <div class="card">
+                                <div class="card-header">
+                                    Card Header 1
+                                </div>
+                                <div class="card-body">
+                                    <p>Card Content 1</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Repeat for other cards -->
+                        <div class="item">
+                            <div class="card">
+                                <div class="card-header">
+                                    Card Header 2
+                                </div>
+                                <div class="card-body">
+                                    <p>Card Content 2</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="card">
+                                <div class="card-header">
+                                    Card Header 3
+                                </div>
+                                <div class="card-body">
+                                    <p>Card Content 3</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="card">
+                                <div class="card-header">
+                                    Card Header 4
+                                </div>
+                                <div class="card-body">
+                                    <p>Card Content 4</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="card">
+                                <div class="card-header">
+                                    Card Header 5
+                                </div>
+                                <div class="card-body">
+                                    <p>Card Content 5</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="card">
+                                <div class="card-header">
+                                    Card Header 6
+                                </div>
+                                <div class="card-body">
+                                    <p>Card Content 6</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="card">
+                                <div class="card-header">
+                                    Card Header 7
+                                </div>
+                                <div class="card-body">
+                                    <p>Card Content 7</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Footer -->
+            <div class="col-12 bg-dark text-light fixed-bottom">
+                <h3 class="text-center">Footer</h3>
+                <!-- Footer content goes here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $(".owl-carousel").owlCarousel({
+                loop: true,
+                margin: 10,
+                nav: true,
+                responsive: {
+                    0: {
+                        items: 1
+                    },
+                    600: {
+                        items: 3
+                    },
+                    1000: {
+                        items: 7
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
