@@ -9,7 +9,6 @@
     <!-- Owl Carousel CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
-    <link rel="stylesheet" href="style.css">
     <style>
         /* Set height of the content area */
         .content {
@@ -30,19 +29,18 @@
             justify-content: center;
             align-items: center;
             height: 100%;
+            overflow-x: auto; /* Enable horizontal scrolling */
         }
 
         /* Styling the carousel box */
         .owl-carousel {
-            width: 80%; /* Adjust as needed */
+            width: 100%; /* Adjust as needed */
         }
 
         .owl-carousel .item {
             margin: 5px;
-        }
-
-        .owl-carousel .item .card {
-            width: 100%;
+            width: 300px;
+            display: inline-block; /* Ensure boxes stay inline */
         }
 
         /* Footer styling */
@@ -82,35 +80,38 @@
                 <!-- Sidebar content goes here -->
             </div>
 
-            <!-- Content -->
-            <div class="col-8">
+           <!-- Content -->
+            <div class="col-10">
                 <div class="carousel-container">
                     <div class="owl-carousel owl-theme">
-                        <div class="item">
-                            <div class="card">
-                                <div class="card-header">
-                                    Card Header 1
-                                </div>
-                                <div class="card-body">
-                                    <p>Card Content 1</p>
+                        <% tasks.slice(0, 3).forEach(function(day) { %> <!-- Display only the first 3 days -->
+                            <div class="item">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <%= day.date %>
+                                    </div>
+                                    <div class="card-body">
+                                        <% day.taskInfo.forEach(function(task, index) { %>
+                                            <div>
+                                                <!-- Checkbox to mark task as done -->
+                                                <input type="checkbox" id="done_<%= index %>" class="task-done-checkbox" data-task-id="<%= task.id %>">
+                                                <!-- Input field for the task -->
+                                                <input type="text" class="form-control mb-2" value="<%= index + 1 %>. <%= task.description %> (Importance: <%= task.importance %>)">
+                                            </div>
+                                        <% }); %>
+                                        <% for (let i = day.taskInfo.length + 1; i <= 6; i++) { %> <!-- Adjust to display up to 6 tasks -->
+                                            <!-- Input field for a new task -->
+                                            <input type="text" class="form-control mb-2" value="" placeholder="plan a task">
+                                        <% } %>
+                                    </div>
+                                    
                                 </div>
                             </div>
-                        </div>
-                        <!-- Repeat for other cards -->
-                        <!-- Example card -->
-                        <div class="item">
-                            <div class="card">
-                                <div class="card-header">
-                                    Card Header 2
-                                </div>
-                                <div class="card-body">
-                                    <p>Card Content 2</p>
-                                </div>
-                            </div>
-                        </div>
+                        <% }); %>
                     </div>
                 </div>
             </div>
+
             <!-- Footer -->
             <div class="col-12 fixed-bottom footer">
                 <h3 class="text-center">Footer</h3>
@@ -135,7 +136,7 @@
                         items: 3
                     },
                     1000: {
-                        items: 7
+                        items: 4
                     }
                 }
             });
