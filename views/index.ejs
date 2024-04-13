@@ -12,36 +12,54 @@
     <link rel="stylesheet" href="style.css">
     <style>
         /* Set height of the content area */
-            .content {
-                min-height: calc(100vh - 56px); /* Adjust based on your navbar height */
-                /* 56px is the default height of the navbar in Bootstrap */
-            }
+        .content {
+            min-height: calc(100vh - 56px); /* Adjust based on your navbar height */
+            /* 56px is the default height of the navbar in Bootstrap */
+        }
 
-            /* Sidebar styling */
-            .sidebar {
-                height: 75vh;
-            }
+        /* Sidebar styling */
+        .sidebar {
+            height: 75vh;
+            background-color: #7AA2E3; /* Coral */
+            color: #2D3142; /* Dark Slate Gray */
+        }
 
-            /* Centering the carousel */
-            .carousel-container {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                height: 100%;
-            }
+        /* Centering the carousel */
+        .carousel-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
 
-            /* Styling the carousel box */
-            .owl-carousel {
-                width: 80%; /* Adjust as needed */
-            }
+        /* Styling the carousel box */
+        .owl-carousel {
+            width: 80%; /* Adjust as needed */
+        }
 
-            .owl-carousel .item {
-                margin: 5px;
-            }
+        .owl-carousel .item {
+            margin: 5px;
+        }
 
-            .owl-carousel .item .card {
-                width: 100%;
-            }
+        .owl-carousel .item .card {
+            width: 100%;
+        }
+
+        /* Footer styling */
+        .footer {
+            background-color: #7AA2E3; /* Coral */
+            color: #2D3142; /* Dark Slate Gray */
+        }
+
+        /* Text color */
+        body {
+            color: #2D3142; /* Dark Slate Gray */
+        }
+
+        /* Background color */
+        body {
+            background-color: #F8F6E3; /* Light Yellow */
+        }
     </style>
 </head>
 
@@ -49,8 +67,8 @@
     <div class="container-fluid content">
         <div class="row">
             <!-- Sidebar -->
-            <div class="col-2 bg-dark text-light d-flex flex-column sidebar">
-                <h3>Welcome: <%= user.name %></h3>
+            <div class="col-2 d-flex flex-column align-items-center sidebar">
+                <h3 class="mt-5">Welcome: <%= user.name %></h3>
                 <!-- User data -->
                 <p>Email: <%= user.email %></p>
                 <% if (user.ava) { %>
@@ -59,6 +77,8 @@
                     <!-- Use default avatar if user's avatar is not available -->
                     <img src="/img/default_ava.svg" alt="Default Avatar" style="max-width: 100px;">
                 <% } %>
+                <!-- Logout button -->
+                <button class="btn btn-danger mt-3" onclick="logout()">Logout</button>
                 <!-- Sidebar content goes here -->
             </div>
 
@@ -77,6 +97,7 @@
                             </div>
                         </div>
                         <!-- Repeat for other cards -->
+                        <!-- Example card -->
                         <div class="item">
                             <div class="card">
                                 <div class="card-header">
@@ -87,61 +108,11 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="item">
-                            <div class="card">
-                                <div class="card-header">
-                                    Card Header 3
-                                </div>
-                                <div class="card-body">
-                                    <p>Card Content 3</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="card">
-                                <div class="card-header">
-                                    Card Header 4
-                                </div>
-                                <div class="card-body">
-                                    <p>Card Content 4</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="card">
-                                <div class="card-header">
-                                    Card Header 5
-                                </div>
-                                <div class="card-body">
-                                    <p>Card Content 5</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="card">
-                                <div class="card-header">
-                                    Card Header 6
-                                </div>
-                                <div class="card-body">
-                                    <p>Card Content 6</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="card">
-                                <div class="card-header">
-                                    Card Header 7
-                                </div>
-                                <div class="card-body">
-                                    <p>Card Content 7</p>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
             <!-- Footer -->
-            <div class="col-12 bg-dark text-light fixed-bottom">
+            <div class="col-12 fixed-bottom footer">
                 <h3 class="text-center">Footer</h3>
                 <!-- Footer content goes here -->
             </div>
@@ -151,7 +122,7 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
     <script>
-        $(document).ready(function(){
+        $(document).ready(function () {
             $(".owl-carousel").owlCarousel({
                 loop: true,
                 margin: 10,
