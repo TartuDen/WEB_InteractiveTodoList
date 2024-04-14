@@ -1,99 +1,4 @@
 
-// let tasks = [
-//     // Today's tasks
-//     {
-//         id: 1,
-//         date: "13.04.2024",
-//         userID: 1,
-//         taskInfo: [{
-//                 description: "Study",
-//                 importance: "high",
-//             },
-//             {
-//                 description: "Play with kids",
-//                 importance: "medium",
-//             },
-//             {
-//                 description: "Watch movie with Alina",
-//                 importance: "high",
-//             }
-//         ]
-//     },
-//     // Tomorrow's tasks
-//     {
-//         id: 2,
-//         date: "14.04.2024",
-//         userID: 1,
-//         taskInfo: [{
-//                 description: "Go to the gym",
-//                 importance: "medium",
-//             },
-//             {
-//                 description: "Do grocery shopping",
-//                 importance: "high",
-//             },
-//             {
-//                 description: "Work on project proposal",
-//                 importance: "high",
-//             },
-//             {
-//                 description: "Call mom",
-//                 importance: "low",
-//             }
-//         ]
-//     },
-//     // Day after tomorrow's tasks
-//     {
-//         id: 3,
-//         date: "15.04.2024",
-//         userID: 1,
-//         taskInfo: [{
-//                 description: "Attend meeting with team",
-//                 importance: "high",
-//             },
-//             {
-//                 description: "Visit dentist",
-//                 importance: "high",
-//             },
-//             {
-//                 description: "Read book",
-//                 importance: "low",
-//             },
-//             {
-//                 description: "Prepare dinner",
-//                 importance: "medium",
-//             }
-//         ]
-//     },
-//     // Empty day
-//     {
-//         id: 4,
-//         date: "16.04.2024",
-//         userID: 1,
-//         taskInfo: []
-//     },
-//     // Empty day
-//     {
-//         id: 5,
-//         date: "17.04.2024",
-//         userID: 1,
-//         taskInfo: []
-//     },
-//     // Empty day
-//     {
-//         id: 6,
-//         date: "18.04.2024",
-//         userID: 1,
-//         taskInfo: []
-//     },
-//     // Empty day
-//     {
-//         id: 7,
-//         date: "19.04.2024",
-//         userID: 1,
-//         taskInfo: []
-//     }
-// ];
 export function isToday() {
     const today = new Date();
     const formattedToday = formatDate(today);
@@ -110,3 +15,34 @@ function formatDate(date) {
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
 }
+
+export function updateTasks(tasks, today, user) {
+    console.log(today);
+    // Find the index of the task corresponding to today's date
+    const index = tasks.findIndex(task => task.date.slice(0, 10) === today);
+
+    // If a task for today is found
+    if (index !== -1) {
+        // Remove all tasks before today
+        tasks = tasks.slice(index);
+    } else {
+        // If no task for today is found, create empty tasks for the remaining days
+        const lastDate = tasks[tasks.length - 1].date; // Get the last date in the tasks array
+        const lastDateTime = new Date(lastDate).getTime(); // Convert last date to milliseconds
+
+
+        // Loop to create tasks for the next 7 days
+        for (let i = 1; i <= 7 - tasks.length; i++) {
+            const nextDate = new Date(lastDateTime + i * 24 * 60 * 60 * 1000); // Add i days to the last date
+            const formattedNextDate = nextDate.toISOString().slice(0, 10); // Format the next date as YYYY-MM-DD
+            const emptyTask = {
+                date: formattedNextDate,
+                userID: user.id,
+                taskInfo: []
+            };
+            tasks.push(emptyTask);
+        }
+    }
+    return tasks;
+}
+

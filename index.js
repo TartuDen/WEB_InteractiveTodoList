@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 import { describe } from 'node:test';
 import axios from 'axios';
 import { isToday, isTomorrow } from './helperFuncs.js';
+import { updateTasks } from './helperFuncs.js';
 
 const app = express();
 const port = 8080;
@@ -27,40 +28,6 @@ async function getData(){
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
-function updateTasks(tasks, today, user) {
-    console.log(today);
-    // Find the index of the task corresponding to today's date
-    const index = tasks.findIndex(task => task.date.slice(0, 10) === today);
-
-    // If a task for today is found
-    if (index !== -1) {
-        // Remove all tasks before today
-        tasks = tasks.slice(index);
-    } else {
-        // If no task for today is found, create empty tasks for the remaining days
-        const lastDate = tasks[tasks.length - 1].date; // Get the last date in the tasks array
-        const lastDateTime = new Date(lastDate).getTime(); // Convert last date to milliseconds
-
-        // Loop to create tasks for the next 7 days
-        for (let i = 1; i <= 7 - tasks.length; i++) {
-            const nextDate = new Date(lastDateTime + i * 24 * 60 * 60 * 1000); // Add i days to the last date
-            const formattedNextDate = nextDate.toISOString().slice(0, 10); // Format the next date as YYYY-MM-DD
-            const emptyTask = {
-                date: formattedNextDate,
-                userID: user.id,
-                taskInfo: []
-            };
-            tasks.push(emptyTask);
-        }
-    }
-    console.log("*************");
-    console.log(tasks);
-    return tasks;
-}
-
-
-
 
 app.get("/", async (req, res) => {
     let today = isToday();
