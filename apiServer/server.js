@@ -1,10 +1,18 @@
 import bodyParser from 'body-parser';
 import express from 'express';
+import pg from 'pg';
+import { createUserTable, createTasksTable } from './createTables.js';
 
 
 const app = express();
 const port = 8081;
-
+export const pool = new pg.Pool({
+    user: 'dverves',
+    host: 'localhost',
+    database: 'to_do_list',
+    password: '123',
+    port: 5432,
+});
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
@@ -111,7 +119,39 @@ let tasks = [
         taskInfo: []
     }
 ];
+// Call the function to create the user table
+createUserTable();
 
+createTasksTable();
+
+async function insertTasks(pool, tasks) {
+    const client = await pool.connect();
+    try {
+        for (const task of tasks) {
+            const { id, date, userID, taskInfo } = task;
+            // Convert date format from "DD.MM.YYYY" to "YYYY-MM-DD"
+            const formattedDate = formatDate(date);
+            await client.query(`
+                INSERT INTO tasks (id, date, userID, taskInfo)
+                VALUES ($1, $2, $3, $4)
+            `, [id, formattedDate, userID, taskInfo]);
+        }
+        console.log("Tasks inserted successfully.");
+    } catch (error) {
+        console.error("Error inserting tasks:", error);
+    } finally {
+        client.release();
+    }
+}
+
+
+function formatDate(date) {
+    const [day, month, year] = date.split('.');
+    return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+}
+
+
+insertTasks(pool, tasks)
 
 app.get("/api/v01",(req,res)=>{
     let userData = req.body.user
