@@ -101,23 +101,23 @@
            <div class="col-10">
             <div class="carousel-container">
                 <div class="owl-carousel owl-theme">
-                    <% tasks.slice(0, 3).forEach(function(day) { %> <!-- Display only the first 3 days -->
+                    <% tasks.forEach(function(day) { %> <!-- Display only the first 3 days -->
                         <div class="item">
                             <div class="card">
                                 <div class="card-header">
-                                    <% if (today === day.date) { %>
-                                        Today (<%= day.date %>)
-                                    <% } else if  (tomorrow === day.date) { %>
-                                        Tomorrow (<%= day.date %>)
+                                    <% if (today === day.date.slice(0,10)) { %>
+                                        Today (<%= day.date.slice(0,10) %>)
+                                    <% } else if  (tomorrow === day.date.slice(0,10)) { %>
+                                        Tomorrow (<%= day.date.slice(0,10) %>)
                                     <% } else { %>
-                                        <%= day.date %>
+                                        <%= day.date.slice(0,10) %>
                                     <% } %>
                                     
                                 </div>
                                 <div class="card-body">
                                     <!-- Table layout -->
                                     <table class="table table-borderless table-custom">
-                                        <% day.taskInfo.forEach(function(task, index) { %>
+                                        <% day.taskinfo.forEach(function(task, index) { %>
                                             <% if (task.description) { %>
                                                 <form id="deleteForm_<%= index %>" action="/delete-task/<%= task.id %>" method="POST">
                                                     <tr>
