@@ -39,7 +39,7 @@
 
         .owl-carousel .item {
             margin: 5px;
-            width: 300px;
+            width: 350px;
             display: inline-block; /* Ensure boxes stay inline */
         }
 
@@ -92,18 +92,48 @@
                                     </div>
                                     <div class="card-body">
                                         <% day.taskInfo.forEach(function(task, index) { %>
-                                            <div>
-                                                <!-- Checkbox to mark task as done -->
-                                                <input type="checkbox" id="done_<%= index %>" class="task-done-checkbox" data-task-id="<%= task.id %>">
-                                                <!-- Input field for the task -->
-                                                <input type="text" class="form-control mb-2" value="<%= index + 1 %>. <%= task.description %> (Importance: <%= task.importance %>)">
-                                            </div>
+                                            <% if (task.description) { %>
+                                                <form id="deleteForm_<%= index %>" action="/delete-task/<%= task.id %>" method="POST">
+                                                    <!-- Input field for the task -->
+                                                    <div class="input-group mb-2">
+                                                        <!-- Importance indicator -->
+                                                        <% if (task.importance === "high") { %>
+                                                            <span class="badge badge-danger mr-2">!!!</span>
+                                                        <% } else if (task.importance === "medium") { %>
+                                                            <span class="badge badge-warning mr-2">!!</span>
+                                                        <% } else if (task.importance === "low") { %>
+                                                            <span class="badge badge-success mr-2">!</span>
+                                                        <% } %>
+                                                        <!-- Task description -->
+                                                        <input type="text" class="form-control" value="<%= index + 1 %>. <%= task.description %>">
+                                                        <!-- Delete button -->
+                                                        <div class="input-group-append">
+                                                            <button type="submit" class="btn btn-warning" onclick="deleteTask(event, <%= index %>)"></button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            <% } %>
                                         <% }); %>
                                         <% for (let i = day.taskInfo.length + 1; i <= 6; i++) { %> <!-- Adjust to display up to 6 tasks -->
                                             <!-- Input field for a new task -->
-                                            <input type="text" class="form-control mb-2" value="" placeholder="plan a task">
+                                            <div class="input-group mb-2">
+                                                <!-- Importance dropdown menu -->
+                                                <div class="input-group-prepend">
+                                                    <select class="custom-select" id="importance_<%= i %>">
+                                                        <option value="high">high</option>
+                                                        <option value="medium">med🔥</option>
+                                                        <option value="low">low🔥</option>
+                                                    </select>
+                                                </div>
+                                                <!-- Task description -->
+                                                <input type="text" class="form-control" value="" placeholder="Plan a task">
+                                            </div>
                                         <% } %>
                                     </div>
+                                    
+                                    
+                                    
+                                    
                                     
                                 </div>
                             </div>
@@ -132,13 +162,18 @@
                     0: {
                         items: 1
                     },
-                    600: {
+                    576: {
+                        items: 2
+                    },
+                    768: {
                         items: 3
                     },
-                    1000: {
+                    992: {
                         items: 4
                     }
                 }
+
+
             });
         });
     </script>
