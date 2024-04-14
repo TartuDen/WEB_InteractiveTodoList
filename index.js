@@ -16,7 +16,7 @@ let tasks = [
     // Today's tasks
     {
         id: 1,
-        date: "13.05.2024",
+        date: "13.04.2024",
         userID: 1,
         taskInfo: [{
                 description: "Study",
@@ -24,22 +24,18 @@ let tasks = [
             },
             {
                 description: "Play with kids",
-                importance: "high",
+                importance: "medium",
             },
             {
                 description: "Watch movie with Alina",
                 importance: "high",
-            },
-            {
-                description: "Walk the dog",
-                importance: "low",
             }
         ]
     },
     // Tomorrow's tasks
     {
         id: 2,
-        date: "14.05.2024",
+        date: "14.04.2024",
         userID: 1,
         taskInfo: [{
                 description: "Go to the gym",
@@ -62,7 +58,7 @@ let tasks = [
     // Day after tomorrow's tasks
     {
         id: 3,
-        date: "15.05.2024",
+        date: "15.04.2024",
         userID: 1,
         taskInfo: [{
                 description: "Attend meeting with team",
@@ -85,35 +81,52 @@ let tasks = [
     // Empty day
     {
         id: 4,
-        date: "16.05.2024",
+        date: "16.04.2024",
         userID: 1,
         taskInfo: []
     },
     // Empty day
     {
         id: 5,
-        date: "17.05.2024",
+        date: "17.04.2024",
         userID: 1,
         taskInfo: []
     },
     // Empty day
     {
         id: 6,
-        date: "18.05.2024",
+        date: "18.04.2024",
         userID: 1,
         taskInfo: []
     },
     // Empty day
     {
         id: 7,
-        date: "19.05.2024",
+        date: "19.04.2024",
         userID: 1,
         taskInfo: []
     }
 ];
 
 
+function isToday() {
+    const today = new Date();
+    const formattedToday = formatDate(today);
+    return formattedToday;
+    }
 
+    function isTomorrow() {
+        const tomorrow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
+        const formattedTomorrow = formatDate(tomorrow);
+        return formattedTomorrow;
+    }
+
+    function formatDate(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${day}.${month}.${year}`;
+    }
 
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({extended: true}));
@@ -121,7 +134,10 @@ app.use(bodyParser.json());
 
 
 app.get("/",(req,res)=>{
-    res.status(200).render("index.ejs",{user, tasks})
+    let today = isToday();
+    let tomorrow = isTomorrow();
+
+    res.status(200).render("index.ejs",{user, tasks, today, tomorrow})
 })
 
 app.listen(port, (err)=>{

@@ -18,7 +18,7 @@
 
         /* Sidebar styling */
         .sidebar {
-            height: 75vh;
+            height: 100vh;
             background-color: #7AA2E3; /* Coral */
             color: #2D3142; /* Dark Slate Gray */
         }
@@ -58,13 +58,25 @@
         body {
             background-color: #F8F6E3; /* Light Yellow */
         }
+
+        /* Add this CSS to remove padding and margin inside the table */
+        table.table-custom {
+            border-collapse: collapse;
+        }
+        table.table-custom td,
+        table.table-custom th {
+            padding: 0;
+            margin: 0;
+        }
+
+
     </style>
 </head>
 
 <body>
     <div class="container-fluid content">
         <div class="row">
-            <!-- Sidebar -->
+           <!-- Sidebar -->
             <div class="col-2 d-flex flex-column align-items-center sidebar">
                 <h3 class="mt-5">Welcome: <%= user.name %></h3>
                 <!-- User data -->
@@ -73,81 +85,104 @@
                     <img src="<%= user.ava %>" alt="User Avatar" style="max-width: 100px;">
                 <% } else { %>
                     <!-- Use default avatar if user's avatar is not available -->
-                    <img src="/img/default_ava.svg" alt="Default Avatar" style="max-width: 100px;">
+                    <img src="/img/default_ava2.svg" alt="Default Avatar" style="max-width: 100px;">
                 <% } %>
                 <!-- Logout button -->
                 <button class="btn btn-danger mt-3" onclick="logout()">Logout</button>
-                <!-- Sidebar content goes here -->
+                <!-- Footer information -->
+                <footer class="text-center mt-auto">
+                    <p>&copy; 2024 NoName Company. All rights reserved.</p>
+                    <p>Designed with ❤️ by Pomogadryg</p>
+                </footer>
             </div>
 
+
            <!-- Content -->
-            <div class="col-10">
-                <div class="carousel-container">
-                    <div class="owl-carousel owl-theme">
-                        <% tasks.slice(0, 3).forEach(function(day) { %> <!-- Display only the first 3 days -->
-                            <div class="item">
-                                <div class="card">
-                                    <div class="card-header">
+           <div class="col-10">
+            <div class="carousel-container">
+                <div class="owl-carousel owl-theme">
+                    <% tasks.slice(0, 3).forEach(function(day) { %> <!-- Display only the first 3 days -->
+                        <div class="item">
+                            <div class="card">
+                                <div class="card-header">
+                                    <% if (today === day.date) { %>
+                                        Today (<%= day.date %>)
+                                    <% } else if  (tomorrow === day.date) { %>
+                                        Tomorrow (<%= day.date %>)
+                                    <% } else { %>
                                         <%= day.date %>
-                                    </div>
-                                    <div class="card-body">
+                                    <% } %>
+                                    
+                                </div>
+                                <div class="card-body">
+                                    <!-- Table layout -->
+                                    <table class="table table-borderless table-custom">
                                         <% day.taskInfo.forEach(function(task, index) { %>
                                             <% if (task.description) { %>
                                                 <form id="deleteForm_<%= index %>" action="/delete-task/<%= task.id %>" method="POST">
-                                                    <!-- Input field for the task -->
-                                                    <div class="input-group mb-2">
-                                                        <!-- Importance indicator -->
-                                                        <% if (task.importance === "high") { %>
-                                                            <span class="badge badge-danger mr-2">!!!</span>
-                                                        <% } else if (task.importance === "medium") { %>
-                                                            <span class="badge badge-warning mr-2">!!</span>
-                                                        <% } else if (task.importance === "low") { %>
-                                                            <span class="badge badge-success mr-2">!</span>
-                                                        <% } %>
-                                                        <!-- Task description -->
-                                                        <input type="text" class="form-control" value="<%= index + 1 %>. <%= task.description %>">
-                                                        <!-- Delete button -->
-                                                        <div class="input-group-append">
-                                                            <button type="submit" class="btn btn-warning" onclick="deleteTask(event, <%= index %>)"></button>
-                                                        </div>
-                                                    </div>
+                                                    <tr>
+                                                        <!-- Column 1: Importance selection -->
+                                                        <td>
+                                                            <% if (task.importance === "high") { %>
+                                                                <!-- Red circle emoji for high importance -->
+                                                                <span class="mr-2" style="color: red;">🔴</span>
+                                                            <% } else if (task.importance === "medium") { %>
+                                                                <!-- Yellow circle emoji for medium importance -->
+                                                                <span class="mr-2" style="color: yellow;">🟡</span>
+                                                            <% } else if (task.importance === "low") { %>
+                                                                <!-- Green circle emoji for low importance -->
+                                                                <span class="mr-2" style="color: green;">🟢</span>
+                                                            <% } %>
+                                                        </td>
+                                                        <!-- Column 2: Task description -->
+                                                        <td>
+                                                            <input type="text" class="form-control" value="<%= index + 1 %>. <%= task.description %>">
+                                                        </td>
+                                                        <!-- Column 3: Delete button -->
+                                                        <td>
+                                                            <div class="input-group-append">
+                                                                <button type="submit" class="btn" onclick="deleteTask(event, <%= index %>)">
+                                                                    <!-- Trash can emoji -->
+                                                                    🗑️
+                                                                </button>                                                        
+                                                            </div>
+                                                        </td>
+                                                    </tr>
                                                 </form>
                                             <% } %>
                                         <% }); %>
-                                        <% for (let i = day.taskInfo.length + 1; i <= 6; i++) { %> <!-- Adjust to display up to 6 tasks -->
-                                            <!-- Input field for a new task -->
-                                            <div class="input-group mb-2">
-                                                <!-- Importance dropdown menu -->
-                                                <div class="input-group-prepend">
-                                                    <select class="custom-select" id="importance_<%= i %>">
-                                                        <option value="high">high</option>
-                                                        <option value="medium">med🔥</option>
-                                                        <option value="low">low🔥</option>
-                                                    </select>
-                                                </div>
-                                                <!-- Task description -->
-                                                <input type="text" class="form-control" value="" placeholder="Plan a task">
-                                            </div>
-                                        <% } %>
-                                    </div>
-                                    
-                                    
-                                    
-                                    
-                                    
+                                        <!-- Additional rows for new tasks -->
+
+                                            <tr>
+                                                <!-- Column 1: Importance dropdown menu -->
+                                                <td>
+                                                    <div class="input-group-prepend">
+                                                        <select class="custom-select" id="">
+                                                            <option value="" selected disabled>👉</option> <!-- Default "Select" option -->
+                                                            <option value="high">🔴</option> <!-- Red circle emoji for high importance -->
+                                                            <option value="medium">🟡</option> <!-- Yellow circle emoji for medium importance -->
+                                                            <option value="low">🟢</option> <!-- Green circle emoji for low importance -->
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <!-- Column 2: Task description -->
+                                                <td>
+                                                    <input type="text" class="form-control" value="" placeholder="Plan a task">
+                                                </td>
+                                                <!-- Column 3: Empty -->
+                                                <td></td>
+                                            </tr>
+
+                                    </table>
                                 </div>
                             </div>
-                        <% }); %>
-                    </div>
+                        </div>
+                    <% }); %>
                 </div>
             </div>
-
-            <!-- Footer -->
-            <div class="col-12 fixed-bottom footer">
-                <h3 class="text-center">Footer</h3>
-                <!-- Footer content goes here -->
-            </div>
         </div>
+
+    </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -176,6 +211,27 @@
 
             });
         });
+    </script>
+    <script>
+        function isToday(date) {
+            const today = new Date();
+            const formattedToday = formatDate(today);
+            return formattedToday === date;
+            }
+
+            function isTomorrow(date) {
+                const tomorrow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
+                const formattedTomorrow = formatDate(tomorrow);
+                return formattedTomorrow === date;
+            }
+
+            function formatDate(date) {
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            }
+
     </script>
 </body>
 
