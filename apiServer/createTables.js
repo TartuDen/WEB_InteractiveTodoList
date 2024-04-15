@@ -61,3 +61,4 @@ export async function createTasksTable() {
         console.error("Error creating tasks table:", error);
     }
 }
+

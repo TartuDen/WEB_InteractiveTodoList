@@ -23,7 +23,12 @@ export function updateTasks(tasks, today, user) {
     // If a task for today is found
     if (index !== -1) {
         // Remove all tasks before today
+        console.log("***********tasks***********");
+        // console.log(tasks);
+        // console.log("***********")
         tasks = tasks.slice(index);
+        // console.log(tasks);
+        
     } else {
         // If no task for today is found, create empty tasks for the remaining days
         const lastDate = tasks[tasks.length - 1].date; // Get the last date in the tasks array
