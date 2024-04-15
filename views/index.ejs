@@ -152,13 +152,13 @@
                                             <% } %>
                                         <% }); %>
                                         <!-- Additional rows for new tasks -->
-
+                                        <form id="newTaskForm" action="/add-task" method="POST">
                                             <tr>
                                                 <!-- Column 1: Importance dropdown menu -->
                                                 <td>
                                                     <div class="input-group-prepend">
-                                                        <select class="custom-select" id="">
-                                                            <option value="" selected disabled>👉</option> <!-- Default "Select" option -->
+                                                        <select class="custom-select" name="importance">
+                                                            <option value="low" selected>👉</option> <!-- Default "Select" option -->
                                                             <option value="high">🔴</option> <!-- Red circle emoji for high importance -->
                                                             <option value="medium">🟡</option> <!-- Yellow circle emoji for medium importance -->
                                                             <option value="low">🟢</option> <!-- Green circle emoji for low importance -->
@@ -167,11 +167,16 @@
                                                 </td>
                                                 <!-- Column 2: Task description -->
                                                 <td>
-                                                    <input type="text" class="form-control" value="" placeholder="Plan a task">
+                                                    <input type="text" class="form-control" name="description" placeholder="Plan a task">
                                                 </td>
-                                                <!-- Column 3: Empty -->
-                                                <td></td>
+                                                <!-- Column 3: Submit button -->
+                                                <td>
+                                                    <input type="hidden" name="day" value= <%= day.date.slice(0,10) %>>
+                                                    <button type="submit" class="btn btn-primary">📝</button>
+                                                </td>
                                             </tr>
+                                        </form>
+
 
                                     </table>
                                 </div>

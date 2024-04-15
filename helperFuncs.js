@@ -17,7 +17,6 @@ function formatDate(date) {
 }
 
 export function updateTasks(tasks, today, user) {
-    console.log(today);
     // Find the index of the task corresponding to today's date
     const index = tasks.findIndex(task => task.date.slice(0, 10) === today);
 

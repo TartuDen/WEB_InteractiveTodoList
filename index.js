@@ -29,6 +29,23 @@ app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+app.post("/add-task", (req, res) => {
+    const { importance, description, day } = req.body;
+
+    // Validate the input values
+    if (!description) {
+        return res.status(400).json({ error: "Importance and description are required." });
+    }
+    console.log(importance, description, day)
+
+    // Process the form data, for example, you can save it to the database
+    // Here you would add code to save the task to the database
+
+    // Respond with a success message
+    res.status(200).redirect("/");
+});
+
+
 app.get("/", async (req, res) => {
     let today = isToday();
     let tomorrow = isTomorrow();
