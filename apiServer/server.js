@@ -144,12 +144,19 @@ async function insertTasks(pool, tasks) {
 
 // insertTasks(pool, tasks)
 
-async function getUserTasks(user) {
+async function getUserTasks(user, day) {
     const client = await pool.connect();
+    let queryText;
+    let queryParams = [user.id];
     try {
-        // SQL query to select tasks for the given user
-        const queryText = 'SELECT * FROM tasks WHERE "userid" = $1';
-        const queryParams = [user.id];
+        if (day === "all") {
+            // SQL query to select tasks for the given user
+            queryText = 'SELECT * FROM tasks WHERE "userid" = $1 ORDER BY id';
+        } else {
+            // SQL query to select tasks for the given user and date
+            queryText = 'SELECT * FROM tasks WHERE "userid" = $1 AND "date" = $2 ORDER BY id';
+            queryParams.push(day);
+        }
         
         // Execute the query
         const result = await client.query(queryText, queryParams);
@@ -162,7 +169,7 @@ async function getUserTasks(user) {
         });
         
         // Return the tasks with adjusted dates
-        console.log(tasksWithAdjustedDates);
+        // console.log(tasksWithAdjustedDates);
         return tasksWithAdjustedDates;
     } catch (error) {
         console.error('Error retrieving tasks for user:', error);
@@ -172,11 +179,48 @@ async function getUserTasks(user) {
     }
 }
 
+async function insertOrUpdateTask(task) {
+    task = task[0];
+    const client = await pool.connect();
+    try {
+        // Check if a task with the given id already exists in the database
+        const existingTask = await client.query('SELECT * FROM tasks WHERE id = $1', [task.id]);
+
+        if (existingTask.rows.length === 0) {
+            // If no task with the given id exists, insert the new task into the database
+            await client.query(`
+                INSERT INTO tasks (date, userID, taskInfo)
+                VALUES ($1, $2, $3)
+            `, [task.date, task.userid, task.taskinfo]);
+            console.log("New task inserted successfully.");
+        } else {
+            // If a task with the given id exists, update it with the new task information
+            await client.query(`
+                UPDATE tasks
+                SET date = $1, userID = $2, taskInfo = $3
+                WHERE id = $4
+            `, [task.date, task.userid, task.taskinfo, task.id]);
+            console.log("Task updated successfully.");
+        }
+    } catch (error) {
+        console.error("Error inserting or updating task:", error);
+        throw error;
+    } finally {
+        client.release();
+    }
+}
+
+
+app.post("/api/v01/new_task", async(req,res)=>{
+    let task = req.body.oneDayTask;
+
+    await insertOrUpdateTask(task);
+    res.status(201).json({message: "posted"});
+})
 
 app.get("/api/v01",async(req,res)=>{
-    const { user } = req.query;
-    let tasks = await getUserTasks(user);
-    // console.log(tasks);
+    const { user, day } = req.query;
+    let tasks = await getUserTasks(user, day);
     res.status(200).json({tasks, user});
 })
 

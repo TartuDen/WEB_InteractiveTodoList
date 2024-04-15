@@ -16,12 +16,22 @@ let user = {
     ava: ""
 }
 
-async function getData(){
+async function getData(day = "all"){
     try{
-        const apiResp = await axios.get(apiURL, { params: { user } });
+        const apiResp = await axios.get(apiURL, { params: { user, day } });
         return apiResp.data.tasks
     }catch(err){
         console.error("Failed to retrieve data getData(), error: "+err);
+    }
+}
+
+
+async function postNewTask(oneDayTask){
+    try{
+        let apiResp = await axios.post(apiURL+"/new_task",{oneDayTask});
+        console.log(apiResp.data)
+    }catch(err){
+        console.error("Faild to postNewTask(oneDayTask), error: "+err);
     }
 }
 
@@ -29,14 +39,27 @@ app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.post("/add-task", (req, res) => {
+app.post("/add-task", async (req, res) => {
     const { importance, description, day } = req.body;
+    // const parsedDay = JSON.parse(day);
 
     // Validate the input values
     if (!description) {
         return res.status(400).json({ error: "Importance and description are required." });
     }
-    console.log(importance, description, day)
+    console.log(importance, description);
+    console.log(day);
+    let oneDayTask = await getData(day);
+
+    let newTaskInfo = {
+        importance: importance,
+        description: description
+    }
+    oneDayTask[0].taskinfo.push(newTaskInfo);
+    await postNewTask(oneDayTask);
+
+
+
 
     // Process the form data, for example, you can save it to the database
     // Here you would add code to save the task to the database
